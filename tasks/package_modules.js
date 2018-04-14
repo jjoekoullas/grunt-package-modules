@@ -14,7 +14,9 @@ module.exports = function(grunt) {
       npm = require('npm');
 
   grunt.registerMultiTask('packageModules', 'Packages node_modules dependencies at build time for addition to a distribution package.', function() {
-
+    
+    var origin = process.cwd();
+    
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
 
@@ -41,6 +43,7 @@ module.exports = function(grunt) {
 
       var done = this.async();
 
+      grunt.file.setBase(f.dest);
       npm.load({
         production: true,
         "ignore-scripts": !!f.ignoreScripts,
@@ -55,6 +58,7 @@ module.exports = function(grunt) {
             grunt.fail.fatal(err);
           }
           
+          grunt.file.setBase(origin);
           done();
         });
       });
